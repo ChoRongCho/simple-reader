@@ -302,7 +302,7 @@ def summarize_text(
 
 
 
-# -------- 사용 예시 --------
+# -------- Example --------
 if __name__ == "__main__":
     env = load_env()
     cfg = LLMConfig(

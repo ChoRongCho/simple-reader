@@ -46,10 +46,9 @@ paper_reader/ \
    ```
 
 3. Install dependencies:
+   ```
    pip install -r requirements.txt
-
-   If you do not have a requirements file, install manually:
-   pip install python-dotenv requests beautifulsoup4 pdfminer.six openai
+   ```
 
 4. Set environment variables (.env file in project root):
     ```
@@ -67,20 +66,30 @@ paper_reader/ \
 
 ## Usage
 Run from any directory once installed.
-
+```
+paper-reader <url> or <path-2-document>
+```
 Example commands:
 
 1. Summarize a PDF:
+   ```
    paper-reader ~/Downloads/paper.pdf
+   ```
 
 2. Summarize a web article or online paper:
-   paper-reader "https://arxiv.org/pdf/2407.00000.pdf"
+   ```
+   paper-reader https://arxiv.org/pdf/2407.00000.pdf
+   ```
 
 3. Summarize a specific page range:
+   ```
    paper-reader ./docs/paper.pdf --pages 1-5
+   ```
 
 4. OCR mode for scanned PDFs:
+   ```
    paper-reader ~/Downloads/scanned.pdf --ocr
+   ```
 
 ## Summary Template
 The file templates/SUMMARY.md defines how the summary is structured.
