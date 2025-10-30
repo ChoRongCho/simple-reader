@@ -1,0 +1,27 @@
+# Core dependencies
+python-dotenv>=1.0.1
+requests>=2.31.0
+beautifulsoup4>=4.12.3
+
+# PDF parsing
+pdfminer.six>=20221105
+pypdf>=4.2.0
+
+# Optional readability / HTML cleanup (for web articles)
+readability-lxml>=0.8.1
+markdownify>=0.11.6
+
+# OCR (optional, only needed for scanned PDFs)
+pytesseract>=0.3.10
+pdf2image>=1.17.0
+
+# LLM API clients
+openai>=1.40.0
+ollama>=0.1.7
+
+# Data / utility
+tqdm>=4.66.3
+dataclasses-json>=0.6.7
+
+# (Optional) for debugging or logging
+rich>=13.7.0

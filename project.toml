@@ -1,0 +1,28 @@
+# pyproject.toml
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "paper-reader-cli"
+version = "0.1.0"
+description = "Lightweight blog/paper summarizer CLI (URL or PDF)"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "python-dotenv",
+  "requests",
+  "beautifulsoup4",
+  "pdfminer.six; python_version >= '3.9'",
+  # optional:
+  # "pypdf",
+  # "readability-lxml",
+  # "markdownify",
+  # "pytesseract",
+  # "pdf2image",
+  # "pymupdf",
+  # "openai",             # OpenAI API 사용 시
+]
+
+[project.scripts]
+paper_reader = "paper_reader.cli:main"

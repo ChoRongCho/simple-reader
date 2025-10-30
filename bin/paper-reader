@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+# paper_reader - auto activate conda env, run summarizer, then deactivate
+
+set -e
+trap 'conda deactivate >/dev/null 2>&1 || true' EXIT
+
+# --- Conda env ---
+if command -v conda >/dev/null 2>&1; then
+  # shellcheck disable=SC1091
+  source "$(conda info --base)/etc/profile.d/conda.sh"
+  echo "[INFO] Activating conda environment: paper-reader"
+  conda activate paper-reader || echo "[WARN] Failed to activate 'paper-reader'. Using system Python."
+else
+  echo "[WARN] conda not found. Using system Python."
+fi
+
+# --- args ---
+if [ $# -lt 1 ]; then
+  echo "Usage: paper_reader <URL|PDF_PATH> [options]"
+  exit 2
+fi
+TARGET_RAW="$1"; shift
+ORIG_CWD="$PWD"
+
+# --- URL/경로 정규화 (여기서 인자 전달되는 heredoc 사용) ---
+TARGET_ABS="$(
+python - "$TARGET_RAW" "$ORIG_CWD" <<'PY'
+import os, sys, urllib.parse
+p, cwd = sys.argv[1], sys.argv[2]
+u = urllib.parse.urlparse(p)
+if u.scheme in ("http","https") and u.netloc:
+    print(p)                       # URL은 그대로
+else:
+    p = os.path.expanduser(p)
+    if not os.path.isabs(p):
+        p = os.path.abspath(os.path.join(cwd, p))  # 사용자의 현재 작업폴더 기준
+    print(p)
+PY
+)"
+
+# --- 로컬 파일이면 존재/권한 체크 ---
+if [[ ! "$TARGET_ABS" =~ ^https?:// ]]; then
+  if [ ! -e "$TARGET_ABS" ]; then
+    echo "[ERROR] Input not found: $TARGET_ABS"
+    exit 2
+  fi
+  if [ ! -r "$TARGET_ABS" ]; then
+    echo "[ERROR] Permission denied (not readable): $TARGET_ABS"
+    exit 2
+  fi
+fi
+
+# --- 프로젝트 루트로 이동 ---
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_ROOT"
+
+# --- 실행 ---
+python -m paper_reader.cli "$TARGET_ABS" "$@"
